@@ -43,6 +43,13 @@ def login():
     username = data.get('username', '').strip()
     password = data.get('password', '').strip()
     
+    # 👑 सरवेश भाई (Director) के लिए डायरेक्ट वीआईपी एंट्री
+    if username.lower() == "sarvesh" and password == "jrd2026":
+        session['name'] = "SARVESH BHAI"
+        session['role'] = "DIRECTOR"  # यहाँ रोल बिल्कुल सही सेट हो गया
+        session['assigned_class'] = "ALL CLASSES"
+        return jsonify({"status": "success", "role": "DIRECTOR"})
+        
     try:
         sheet_file = connect_google_sheet()
         info_sheet = sheet_file.worksheet('Staff_Info')
@@ -59,7 +66,7 @@ def login():
                 
                 return jsonify({"status": "success", "role": session['role']})
                 
-        return jsonify({"status": "error", "message": "गलत यूज़र आईडी या密码!"})
+        return jsonify({"status": "error", "message": "गलत यूज़र आईडी या पासवर्ड!"})
     except Exception as e:
         return jsonify({"status": "error", "message": f"डेटाबेस एरर: {str(e)}"})
 
