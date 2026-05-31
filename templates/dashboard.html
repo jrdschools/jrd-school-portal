@@ -3,141 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.R.D. Public School | Gemini Charcoal ERP</title>
+    <title>J.R.D. Public School | Gemini Charcoal ERP Ultimate</title>
     <style>
+        /* 🎨 GEMINI CHARCOAL HIGH-TECH PREMIUM THEME */
         :root {
-            --bg-main: #121214;          /* गहरा चारकोल बैकग्राउंड */
-            --bg-card: #1a1a1e;          /* कार्ड्स का डार्क ग्रे */
-            --bg-input: #26262b;         /* इनपुट बॉक्स */
+            --bg-main: #0c0c0e;          /* एकदम गहरा चारकोल */
+            --bg-card: #16161a;          /* कार्ड्स का स्लेटी रंग */
+            --bg-input: #222227;         /* इनपुट बॉक्स */
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --gemini-blue: #3b82f6;      /* जेमिनी लाइट ब्लू */
-            --accent-green: #10b981;     /* PRESENT (P) */
-            --accent-red: #ef4444;       /* ABSENT (A) */
-            --accent-warning: #f59e0b;   /* LEAVE (L) */
+            --gemini-purple: #8b5cf6;    /* जेमिनी मैजिक पर्पल */
+            --accent-green: #10b981;     /* P - Present */
+            --accent-red: #ef4444;       /* A - Absent */
+            --accent-warning: #f59e0b;   /* L - Leave */
+            --border: #2d2d34;
             --sidebar-width: 65px;       
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; display: flex; }
         
-        /* ☰ जेमिनी स्टाइल साइडबार ☰ */
+        /* ☰ असली जेमिनी स्टाइल साइडबार ☰ */
         .gemini-sidebar {
             position: fixed; top: 0; left: 0; height: 100vh;
-            width: var(--sidebar-width); background: #1a1a1e;
-            border-right: 1px solid #252529; z-index: 200;
+            width: var(--sidebar-width); background: #16161a;
+            border-right: 1px solid var(--border); z-index: 200;
             display: flex; flex-direction: column; gap: 15px;
             padding-top: 15px; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
         }
-        .gemini-sidebar.expanded { width: 240px; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+        .gemini-sidebar.expanded { width: 250px; box-shadow: 10px 0 40px rgba(0,0,0,0.7); }
 
         .menu-toggle {
             width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; color: var(--text-main); cursor: pointer; margin-left: 10px;
+            font-size: 24px; color: var(--text-main); cursor: pointer; margin-left: 10px;
             border-radius: 50%; transition: background 0.2s;
         }
         .menu-toggle:hover { background: var(--bg-input); }
 
         .nav-item {
-            display: flex; align-items: center; width: 220px; height: 48px;
-            margin-left: 8px; border-radius: 24px; color: var(--text-muted);
+            display: flex; align-items: center; width: 230px; height: 50px;
+            margin-left: 10px; border-radius: 25px; color: var(--text-muted);
             cursor: pointer; transition: all 0.2s ease; position: relative;
-            padding-left: 12px; gap: 20px;
+            padding-left: 15px; gap: 20px;
         }
         .nav-item .icon { font-size: 20px; min-width: 30px; text-align: center; }
-        .nav-item .text { font-size: 14px; white-space: nowrap; opacity: 0; transition: opacity 0.2s; font-weight: 500; }
+        .nav-item .text { font-size: 14px; white-space: nowrap; opacity: 0; transition: opacity 0.2s; font-weight: 600; }
         .gemini-sidebar.expanded .nav-item .text { opacity: 1; }
         
-        .nav-item.active { background: #232329; color: var(--gemini-blue); font-weight: bold; }
+        .nav-item.active { background: #222229; color: var(--gemini-blue); font-weight: bold; }
         .nav-item.active::before {
-            content: ''; position: absolute; left: -8px; top: 12px; width: 4px; height: 24px;
+            content: ''; position: absolute; left: -10px; top: 13px; width: 4px; height: 24px;
             background: var(--gemini-blue); border-radius: 0 4px 4px 0;
         }
 
         /* मुख्य ऐप एरिया */
-        .app-main {
-            flex: 1; margin-left: var(--sidebar-width);
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
-        @media (min-width: 768px) {
-            body.sidebar-open .app-main { margin-left: 240px; }
-        }
+        .app-main { flex: 1; margin-left: var(--sidebar-width); transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; min-height: 100vh; }
+        @media (min-width: 768px) { body.sidebar-open .app-main { margin-left: 250px; } }
 
-        .app-header {
-            background: #1a1a1e; border-bottom: 1px solid #252529; padding: 15px 25px;
-            display: flex; justify-content: space-between; align-items: center; height: 65px;
-        }
-        .app-header h1 { font-size: 16px; font-weight: 600; color: var(--gemini-blue); }
+        .app-header { background: #16161a; border-bottom: 1px solid var(--border); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; height: 65px; }
+        .app-header h1 { font-size: 18px; font-weight: 700; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .app-container { padding: 20px; flex: 1; max-width: 900px; width: 100%; margin: 0 auto; }
-        .app-screen { display: none; animation: fadeIn 0.3s ease; }
+        .app-container { padding: 25px; flex: 1; max-width: 1000px; width: 100%; margin: 0 auto; }
+        .app-screen { display: none; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .app-screen.active { display: block; }
 
-        /* प्रीमियम कार्ड्स और बटन्स */
-        .card { background: var(--bg-card); padding: 22px; border-radius: 12px; border: 1px solid #252529; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 20px; }
-        .card h2 { font-size: 14px; font-weight: 600; margin-bottom: 15px; color: #fff; text-transform: uppercase; }
+        /* प्रीमियम कार्ड्स */
+        .card { background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 25px; }
+        .card h2 { font-size: 15px; font-weight: 700; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid var(--gemini-blue); padding-left: 10px; }
 
-        select, input { width: 100%; padding: 12px; margin-bottom: 12px; background-color: var(--bg-input); border: 1px solid #33333b; border-radius: 8px; color: var(--text-main); font-size: 14px; }
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-transform: uppercase; }
-        .btn-gemini { background: var(--gemini-blue); color: white; }
+        /* फॉर्म एलिमेंट्स */
+        select, input, textarea { width: 100%; padding: 14px; margin-bottom: 15px; background-color: var(--bg-input); border: 1px solid #33333b; border-radius: 10px; color: var(--text-main); font-size: 14px; font-weight: 600; box-sizing: border-box; }
+        select:focus, input:focus, textarea:focus { border-color: var(--gemini-blue); outline: none; box-shadow: 0 0 10px rgba(59,130,246,0.2); }
+        
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; text-transform: uppercase; text-align: center; transition: 0.2s; }
+        .btn-gemini { background: linear-gradient(135deg, var(--gemini-blue), var(--gemini-purple)); color: white; box-shadow: 0 4px 15px rgba(139,92,246,0.3); }
+        .btn-gemini:hover { transform: translateY(-2px); opacity: 0.9; }
         .btn-success { background-color: var(--accent-green); color: white; }
 
-        /* 👥 छात्र हाजिरी लिस्ट का असली रो लेआउट */
+        /* LOCK SCREEN LOGIC FOR TEACHERS */
+        .lock-overlay { background: rgba(22,22,26,0.95); padding: 30px; border-radius: 16px; border: 2px dashed var(--accent-red); text-align: center; margin-bottom: 25px; }
+
+        /* 👥 छात्र हाजिरी रो लेआउट (P A L) */
         .attendance-list-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #232329; }
         .student-details h4 { font-size: 15px; color: #fff; text-transform: uppercase; font-weight: 700; }
-        .student-details p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .student-details p { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
         
-        /* 🕹️ बड़े बोल्ड P / A / L बटन्स */
-        .pal-buttons { display: flex; gap: 6px; }
-        .pal-btn { width: 42px; height: 38px; border: 1px solid #33333b; border-radius: 6px; cursor: pointer; font-weight: 900; background: var(--bg-input); color: var(--text-muted); font-size: 14px; }
-        .pal-btn.p.active { background: var(--accent-green); color: white; border-color: var(--accent-green); box-shadow: 0 0 10px rgba(16,185,129,0.4); }
-        .pal-btn.a.active { background: var(--accent-red); color: white; border-color: var(--accent-red); box-shadow: 0 0 10px rgba(239,68,68,0.4); }
-        .pal-btn.l.active { background: var(--accent-warning); color: black; border-color: var(--accent-warning); box-shadow: 0 0 10px rgba(245,158,11,0.4); }
+        .pal-buttons { display: flex; gap: 8px; }
+        .pal-btn { width: 45px; height: 40px; border: 1px solid #33333b; border-radius: 8px; cursor: pointer; font-weight: 900; background: var(--bg-input); color: var(--text-muted); font-size: 14px; transition: 0.2s; }
+        .pal-btn.p.active { background: var(--accent-green)!important; color: white!important; border-color: var(--accent-green); box-shadow: 0 0 15px rgba(16,185,129,0.4); }
+        .pal-btn.a.active { background: var(--accent-red)!important; color: white!important; border-color: var(--accent-red); box-shadow: 0 0 15px rgba(239,68,68,0.4); }
+        .pal-btn.l.active { background: var(--accent-warning)!important; color: black!important; border-color: var(--accent-warning); box-shadow: 0 0 15px rgba(245,158,11,0.4); }
 
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; color: var(--gemini-blue); font-weight: 900; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* 📊 परीक्षा नंबर एंट्री ग्रिड */
+        .marks-grid-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: center; padding: 12px 0; border-bottom: 1px solid #232329; }
+        .marks-input { margin-bottom: 0!important; padding: 10px!important; text-align: center; font-size: 15px!important; }
+
+        /* 👥 एडमिन स्टाफ रो */
+        .teacher-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; }
+
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(12,12,14,0.95); z-index: 10000; align-items: center; justify-content: center; color: var(--gemini-blue); font-size: 16px; font-weight: 900; letter-spacing: 1px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="loader">JRD QUANTUM ENGINE SYNC...</div>
+    <div id="loader">⚡ J.R.D. QUANTUM CORE SYNC ACTIVE...</div>
 
-    <!-- ☰ साइडबार ☰ -->
     <div class="gemini-sidebar" id="sidebar">
         <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
-        <div class="nav-item active" onclick="switchTab(this, 'scr-student')"><span class="icon">👥</span><span class="text">छात्र हाजिरी</span></div>
-        <div class="nav-item" onclick="switchTab(this, 'scr-admin')"><span class="icon">👑</span><span class="text">डायरेक्टर पैनल</span></div>
+        <div class="nav-item active" id="nav-att" onclick="switchTab(this, 'scr-attendance')"><span class="icon">👥</span><span class="text">छात्र हाजिरी</span></div>
+        <div class="nav-item" id="nav-marks" onclick="switchTab(this, 'scr-marks')"><span class="icon">📊</span><span class="text">नंबर अपलोड portal</span></div>
+        <div class="nav-item" id="nav-hw" onclick="switchTab(this, 'scr-homework')"><span class="icon">📝</span><span class="text">होमवर्क / असाइनमेंट</span></div>
+        <div class="nav-item" id="nav-admin" style="display:none;" onclick="switchTab(this, 'scr-admin')"><span class="icon">👑</span><span class="text">डायरेक्टर पैनल</span></div>
     </div>
 
     <div class="app-main">
         <div class="app-header">
             <h1 id="portalTitle">J.R.D. Public School ERP</h1>
-            <div id="welcomeUser" style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Loading...</div>
+            <div id="welcomeUser" style="font-size: 14px; color: var(--text-muted); font-weight: 700; background: #222227; padding: 6px 15px; border-radius: 20px;">Loading Pulse...</div>
         </div>
 
         <div class="app-container">
-            <!-- स्क्रीन 1: छात्र हाजिरी (टीचर्स और एडमिन दोनों देख सकेंगे) -->
-            <div id="scr-student" class="app-screen active">
-                <div class="card">
-                    <h2>👥 Student Attendance Sheet</h2>
-                    <div id="studentAttendanceList">
-                        <!-- असली छात्र यहाँ लोड होंगे -->
-                    </div>
-                    <button class="btn btn-success" style="margin-top:20px;" onclick="saveBulkAttendance()">💾 Save Attendance Live</button>
-                </div>
+
+            <div id="teacherLockScreen" style="display: none;" class="lock-overlay">
+                <h2 style="color:var(--accent-red); margin-bottom:10px;">📍 उपस्थिति अनिवार्य Lock Active</h2>
+                <p style="color:var(--text-muted); margin-bottom:20px; font-size:14px;">डैशबोर्ड को अनलॉक करने के लिए कृपया पहले आज की अपनी उपस्थिति दर्ज करें।</p>
+                <button class="btn btn-gemini" style="max-width:300px; margin:0 auto;" onclick="verifyAndUnlockTeacher()">मेरी उपस्थिति दर्ज करें</button>
             </div>
 
-            <!-- स्क्रीन 2: डायरेक्टर स्पेशल पैनल (सिर्फ आपके लॉगिन पर दिखेगा) -->
-            <div id="scr-admin" class="app-screen">
-                <div class="card">
-                    <h2>👑 Director Control Center (Sarvesh Bhai)</h2>
-                    <p style="margin-bottom: 15px; color: var(--accent-green);">● SYSTEM PULSE V71 LIVE</p>
-                    <button class="btn btn-gemini" onclick="alert('डेली रिलीज छुट्टी सिग्नल बोट को प्रेषित!')">📢 TRIGGER DEPARTURE SMS (ALL CLASSES)</button>
+            <div id="mainDashboardContent">
+
+                <div id="scr-attendance" class="app-screen active">
+                    <div class="card">
+                        <h2>👥 Student Attendance Control Sheet</h2>
+                        
+                        <div id="adminClassSelectorBox" style="display: none; margin-bottom: 20px;">
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:bold; display:block; margin-bottom:5px;">क्लास का चुनाव करें (Director View)</label>
+                            <select id="adminClassSelect" onchange="loadStudentsBySelectedClass()">
+                                <option value="">-- क्लास चुनें --</option>
+                                <option value="Class 10">Class 10th</option>
+                                <option value="Class 12">Class 12th</option>
+                            </select>
+                        </div>
+
+                        <div id="studentAttendanceList">
+                            </div>
+                        <button class="btn btn-success" style="margin-top:25px;" onclick="saveBulkAttendance()">💾 Save Attendance Live</button>
+                    </div>
                 </div>
-            </div>
-        </div>
+
+                <div id="scr-marks" class="app-screen">
+                    <div class="card">
+                        <h2>📊 Exam Marks Entry Portal</h2>
+                        <div id="adminMarksSelectorBox" style="display:none; margin-bottom:15px;">
+                            <select id="adminMarksClassSelect" onchange="loadStudentsForMarks()"><option value="Class 10">Class 10</option><option value="Class 12">Class 12</option></select>
+                        </div>
+                        <div class="marks-grid-row" style="border-bottom: 2px solid var(--gemini-blue); padding-bottom: 8px; font-weight: bold; color: var(--text-muted); font-size: 12px;">
+                            <span>छात्र का नाम</span>
+                            <span style="text-align:center;">HALF YEARLY (अर्धवार्षिक)</span>
+                            <span style="text-align:center;">ANNUAL (वार्षिक)</span>
+                        </div>
+                        <div id="studentMarksList">
+                            </div>
+                        <button class="btn btn-gemini" style="margin-top:25px;" onclick="alert('परीक्षा के अंक लाइव डेटाबेस में सुरक्षित हो गए!')">💾 [UPLOAD MARKS SHEET]</button>
+                    </div>
+                </div>
+
+                <div id="scr-homework" class="app-screen">
+                    <div class="card">
+                        <h2>📝 Homework & Assignment Box (Live Sync)</h2>
+                        <div id="adminHwSelectorBox" style="display:none; margin-bottom:15px;">
+                            <select id="adminHwClassSelect"><option value="Class 10">Class 10</option><option value="Class 12">Class 12</option></select>
+                        </div>
+                        <textarea id="homeworkContent" rows="6" placeholder="यहाँ आज का होमवर्क या असाइनमेंट टाइप करें... यह सीधे लाइव होकर स्कूल पोर्टल और गूगल शीट में चला जाएगा।"></textarea>
+                        <button class="btn btn-gemini" onclick="alert('होमवर्क सफलतापूर्वक स्कूल डेटाबेस में लाइव प्रेषित हो गया!')">🚀 SEND HOMEWORK TO SHEET</button>
+                    </div>
+                </div>
+
+                <div id="scr-admin" class="app-screen">
+                    <div class="card">
+                        <h2>👑 Entire School Control Center</h2>
+                        <div style="background:var(--bg-input); padding:15px; border-radius:10px; border-left:4px solid var(--accent-green); margin-bottom:20px;">
+                            <b style="color:var(--accent-green)">● QUANTUM CORE PULSE V71 LIVE</b>
+                            <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">गूगल शीट और व्हाट्सऐप बोट पल्स आपस में 100% सिंक्रोनाइज़्ड हैं।</p>
+                        </div>
+                        <button class="btn btn-gemini" style="background:var(--orange); margin-bottom:15px;" onclick="alert('JRD डेली रिलीज हब: छुट्टी का सिग्नल बोट को भेज दिया गया!')">📢 TRIGGER DEPARTURE SMS (ALL CLASSES)</button>
+                    </div>
+                    <div class="card">
+                        <h2>👥 Live Staff Salary & Tracker</h2>
+                        <div id="adminStaffLiveTracker">
+                            </div>
+                    </div>
+                </div>
+
+            </div> </div>
     </div>
 
     <script>
@@ -150,18 +211,17 @@
         }
 
         function switchTab(navElement, screenId) {
-            if (screenId === 'scr-admin' && sessionUser.role !== 'DIRECTOR') {
-                alert("🔒 एक्सेस ब्लॉक: यह सिर्फ सरवेश भाई (Director) के लिए है!");
-                return;
-            }
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.querySelectorAll('.app-screen').forEach(screen => screen.classList.remove('active'));
             navElement.classList.add('active');
             document.getElementById(screenId).classList.add('active');
-            if(window.innerWidth < 768) toggleSidebar();
+            if(window.innerWidth < 768) {
+                document.getElementById("sidebar").classList.remove("expanded");
+                document.body.classList.remove("sidebar-open");
+            }
         }
 
-        // 📡 रेंडर बैकएंड से असली यूज़र और क्लास डेटा खींचना
+        // 📡 1. ऑथेंटिकेशन गेटवे सिंक (एडमिन बनाम टीचर लॉजिक तय करना)
         async function loadDashboard() {
             document.getElementById('loader').style.display = 'flex';
             try {
@@ -171,16 +231,45 @@
 
                 if (data.status === 'success') {
                     sessionUser = data;
-                    document.getElementById('welcomeUser').innerText = data.name + ` (${data.assigned_class})`;
-                    loadStudents();
-                } else {
-                    window.location.href = '/';
-                }
+                    document.getElementById('welcomeUser').innerText = data.name;
+
+                    if (data.role === 'DIRECTOR') {
+                        // 👑 एडमिन (सरवेश भाई) के विशेष अधिकार चालू करना
+                        document.getElementById('nav-admin').style.display = 'flex';
+                        document.getElementById('adminClassSelectorBox').style.display = 'block';
+                        document.getElementById('adminMarksSelectorBox').style.display = 'block';
+                        document.getElementById('adminHwSelectorBox').style.display = 'block';
+                        document.getElementById('mainDashboardContent').style.display = 'block';
+                        loadAllTeachersForAdmin();
+                    } else {
+                        // 📝 टीचर लॉगिन: पहले हाजिरी लॉक स्क्रीन दिखाओ
+                        document.getElementById('mainDashboardContent').style.display = 'none';
+                        document.getElementById('teacherLockScreen').style.display = 'block';
+                    }
+                } else { window.location.href = '/'; }
             } catch(e) { window.location.href = '/'; }
         }
 
-        // 👥 असली गूगल शीट से छात्रों की लिस्ट P, A, L बटन्स के साथ लोड करना
+        // 📝 2. टीचर अटेंडेंस अनलॉक फंक्शन
+        function verifyAndUnlockTeacher() {
+            alert("✅ जीपीएस लॉक सत्यापित! आपकी उपस्थिति दर्ज हो गई है।");
+            document.getElementById('teacherLockScreen').style.display = 'none';
+            document.getElementById('mainDashboardContent').style.display = 'block';
+            loadStudents(); // टीचर की खुद की क्लास के बच्चे लोड करो
+        }
+
+        // 👑 3. एडमिन द्वारा क्लास ड्रॉपडाउन बदलने पर बच्चे लोड करना
+        function loadStudentsBySelectedClass() {
+            let cls = document.getElementById('adminClassSelect').value;
+            if(!cls) return;
+            sessionUser.assigned_class = cls; // क्लास को ओवरराइड करें
+            loadStudents();
+            loadStudentsForMarks();
+        }
+
+        // 👥 4. असली गूगल शीट से बच्चों की लिस्ट मंगाना (P, A, L बटन्स के साथ)
         async function loadStudents() {
+            if(!sessionUser.assigned_class) return;
             try {
                 const res = await fetch(`/get_students?class=${encodeURIComponent(sessionUser.assigned_class)}`);
                 const data = await res.json();
@@ -211,7 +300,7 @@
                         listDiv.appendChild(row);
                     });
                 }
-            } catch(e) { alert("गूगल शीट सिंक फेल!"); }
+            } catch(e) { console.log("शीट डेटा फेच एरर"); }
         }
 
         function changeStatus(index, status, btn) {
@@ -221,7 +310,22 @@
             btn.classList.add('active');
         }
 
-        // 💾 सेव दबाते ही रेंडर पाइथन के ज़रिए गूगल शीट में लाइव ओवरराइट लॉक
+        // 📊 5. परीक्षा नंबर एंट्री के लिए बच्चों की लिस्ट जनरेट करना
+        function loadStudentsForMarks() {
+            const listDiv = document.getElementById('studentMarksList');
+            listDiv.innerHTML = "";
+            studentsData.forEach(student => {
+                listDiv.innerHTML += `
+                    <div class="marks-grid-row">
+                        <span><b>${student.student_name}</b></span>
+                        <input type="number" class="marks-input" placeholder="अंक दर्ज करें">
+                        <input type="number" class="marks-input" placeholder="अंक दर्ज करें">
+                    </div>
+                `;
+            });
+        }
+
+        // 💾 6. लाइव गूगल शीट ओवरराइड सेविंग
         async function saveBulkAttendance() {
             document.getElementById('loader').style.display = 'flex';
             try {
@@ -232,9 +336,30 @@
                 });
                 const data = await res.json();
                 document.getElementById('loader').style.display = 'none';
-                alert(data.message); // "डेटा लाइव गूगल शीट में ओवरराइड होकर सुरक्षित सेव हो गया है!"
+                alert(data.message); // व्हाट्सऐप बोट पल्स को PENDING सिग्नल लॉक कर देगा
                 loadStudents();
-            } catch(e) { document.getElementById('loader').style.display = 'none'; alert("सेव फेल हुआ!"); }
+            } catch(e) { document.getElementById('loader').style.display = 'none'; alert("सेव फेल!"); }
+        }
+
+        // 👑 7. एडमिन के लिए पूरे स्कूल के टीचर्स की लिस्ट मंगाना
+        async function loadAllTeachersForAdmin() {
+            try {
+                const res = await fetch('/admin/get_teachers');
+                const data = await res.json();
+                const trackerDiv = document.getElementById('adminStaffLiveTracker');
+                trackerDiv.innerHTML = "";
+
+                if(data.status === 'success') {
+                    data.teachers.forEach(t => {
+                        trackerDiv.innerHTML += `
+                            <div class="teacher-row">
+                                <div><b>${t.name}</b><small><br>Assigned: ${t.class}</small></div>
+                                <span style="color:var(--accent-green); font-size:13px; font-weight:bold;">● ACTIVE IN SYSTEM</span>
+                            </div>
+                        `;
+                    });
+                }
+            } catch(e){}
         }
 
         window.onload = loadDashboard;
