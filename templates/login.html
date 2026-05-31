@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>J.R.D. Public School - Portal Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #0c0c0d;
+      --bg-card: #141517;
+      --bg-input: #000000;
+      --border-color: #383a3e;
+      --text-main: #ffffff;
+      --blue-main: #00d2ff;
+      --blue-glow: 0 0 20px rgba(0, 210, 255, 0.6);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { background: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+
+    /* 🔄 जे.आर.डी. स्पिनर लोडर */
+    #loader {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(12, 12, 13, 0.95); z-index: 10000; align-items: center; justify-content: center;
+    }
+    .jrd-spin {
+      width: 140px; height: 140px; border: 4px solid #2e2f31; border-top: 4px solid var(--blue-main);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center;
+      color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; line-height: 18px;
+      animation: spin 1.2s linear infinite; box-shadow: var(--blue-glow);
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .loader-text-inside { animation: anti-spin 1.2s linear infinite; }
+    @keyframes anti-spin { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+
+    .login-container { max-width: 400px; width: 100%; background: var(--bg-card); border: 2px solid var(--blue-main); border-radius: 24px; padding: 35px 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); text-align: center; }
+    .school-logo { font-size: 45px; color: var(--blue-main); margin-bottom: 15px; text-shadow: var(--blue-glow); }
+    .login-container h2 { font-size: 22px; font-weight: 600; margin-bottom: 5px; }
+    .portal-title { font-size: 14px; color: var(--blue-main); font-weight: bold; margin-bottom: 25px; }
+
+    .input-group { position: relative; margin-bottom: 20px; text-align: left; }
+    .input-group i { position: absolute; left: 15px; top: 15px; color: #62656a; font-size: 16px; }
+    .input-group input { width: 100%; padding: 14px 15px 14px 45px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; color: #fff; font-size: 15px; font-weight: 600; outline: none; }
+    .input-group input:focus { border-color: var(--blue-main); }
+
+    .login-btn { width: 100%; background: linear-gradient(135deg, var(--blue-main), #008ca7); color: #fff; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,210,255,0.3); }
+    .footer-text { margin-top: 25px; font-size: 12px; color: #62656a; }
+  </style>
+</head>
+<body>
+
+<div id="loader"><div class="jrd-spin"><div class="loader-text-inside">J.R.D. PUBLIC SCHOOL<br><span style="font-size:9px; color:var(--blue-main);">PROCESSING</span></div></div></div>
+
+<div class="login-container">
+  <div class="school-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+  <h2>J.R.D. PUBLIC SCHOOL</h2>
+  <div class="portal-title">📝 डिजिटल क्लाउड लॉगिन पैनल</div>
+
+  <form onsubmit="event.preventDefault(); handleLoginSubmit();">
+    <div class="input-group">
+      <i class="fa-solid fa-user"></i>
+      <input type="text" id="userInput" placeholder="यूज़र आईडी दर्ज करें..." required>
+    </div>
+    <div class="input-group">
+      <i class="fa-solid fa-lock"></i>
+      <input type="password" id="keyInput" placeholder="पासवर्ड दर्ज करें..." required>
+    </div>
+    <button type="submit" class="login-btn">लॉगिन करें ➔</button>
+  </form>
+
+  <div class="footer-text">© 2026 J.R.D. ERP | Powered by Python & Koyeb</div>
+</div>
+
+<script>
+  function handleLoginSubmit() {
+    const userVal = document.getElementById("userInput").value.trim();
+    const keyVal = document.getElementById("keyInput").value.trim();
+    document.getElementById("loader").style.display = "flex";
+    
+    fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: userVal, password: keyVal })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        window.location.href = "/dashboard"; // सफल होने पर डैशबोर्ड पर रीडायरेक्ट
+      } else {
+        document.getElementById("loader").style.display = "none";
+        alert(data.message);
+      }
+    })
+    .catch(err => {
+      document.getElementById("loader").style.display = "none";
+      alert("सर्वर एरर: " + err.toString());
+    });
+  }
+</script>
+</body>
+</html>
