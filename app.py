@@ -3,37 +3,40 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import os
+import json
 
 app = Flask(__name__)
-# रेंडर पर सीक्रेट की को सुरक्षित रखने के लिए
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "JRD_SUPER_SECRET_KEY_2026")
 
-# 🔑 गूगल शीट कनेक्ट करने का लॉजिक
+# 🔑 गूगल शीट कनेक्ट करने का नया 100% सुरक्षित लॉजिक (बिना फाइल वाला)
 def connect_google_sheet():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     
-    # यह रेंडर सर्वर पर आपकी 'secret.json' फाइल को ढूंढेगा
-    creds_path = os.path.join(os.path.dirname(__file__), 'secret.json')
+    # रेंडर के सीक्रेट बॉक्स (Environment) से सीधे चाबी उठाना
+    creds_json = os.environ.get("GOOGLE_CREDS_JSON")
     
-    creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
+    if creds_json:
+        # अगर रेंडर सर्वर पर लाइव हैं तो डायरेक्ट टेक्स्ट से क्रेडेंशियल बनाएगा
+        info = json.loads(creds_json)
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
+    else:
+        # अगर लोकल कंप्यूटर पर टेस्टिंग कर रहे हैं तो फाइल से उठाएगा
+        creds_path = os.path.join(os.path.dirname(__file__), 'secret.json')
+        creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
+        
     client = gspread.authorize(creds)
-    
-    # आपकी लाइव गूगल शीट का नाम
     return client.open("JRD Attendance")
 
-# 1. 🚪 मुख्य रूट - लॉगिन पेज दिखाना
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# 🎛️ डैशबोर्ड रूट - लॉगिन के बाद सही पेज पर भेजना
 @app.route('/dashboard')
 def dashboard():
     if 'name' not in session:
         return redirect(url_for('index'))
     return render_template('dashboard.html')
 
-# 2. 🔑 लॉगिन चेक लॉजिक (Staff_Info से ADMIN / TEACHER रोल मैपिंग)
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -56,11 +59,10 @@ def login():
                 
                 return jsonify({"status": "success", "role": session['role']})
                 
-        return jsonify({"status": "error", "message": "गलत यूज़र आईडी या पासवर्ड!"})
+        return jsonify({"status": "error", "message": "गलत यूज़र आईडी या密码!"})
     except Exception as e:
         return jsonify({"status": "error", "message": f"डेटाबेस एरर: {str(e)}"})
 
-# 📱 सेशन की जानकारी फ्रंटएंड को भेजना
 @app.route('/get_session_info', methods=['GET'])
 def get_session_info():
     if 'name' in session:
@@ -72,7 +74,6 @@ def get_session_info():
         })
     return jsonify({"status": "error"})
 
-# 👥 छात्रों की लिस्ट लोड करना (क्लास के हिसाब से)
 @app.route('/get_students', methods=['GET'])
 def get_students():
     class_name = request.args.get('class', '').strip()
@@ -95,7 +96,6 @@ def get_students():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# 🔄 सुपर-फास्ट बल्क अपडेट छात्र अटेंडेंस (0% गूगल ब्लॉक चांस)
 @app.route('/save_student_attendance', methods=['POST'])
 def save_student_attendance():
     data = request.json
@@ -124,17 +124,14 @@ def save_student_attendance():
             
             for r_idx, row in enumerate(cell_matrix[1:], start=2):
                 if row[name_idx] == s_name:
-                    # स्टेटस सेल ऑब्जेक्ट
                     cell_status = att_sheet.cell(r_idx, status_idx + 1)
                     cell_status.value = new_status
                     update_cells_list.append(cell_status)
                     
-                    # टाइम सेल ऑब्जेक्ट
                     cell_time = att_sheet.cell(r_idx, time_idx + 1)
                     cell_time.value = formatted_time
                     update_cells_list.append(cell_time)
                     
-                    # व्हाट्सएप मैसेज स्टेटस सेल ऑब्जेक्ट
                     cell_msg = att_sheet.cell(r_idx, msg_idx + 1)
                     if new_status == "ABSENT":
                         cell_msg.value = "SEND_NOW_PENDING"
@@ -143,7 +140,6 @@ def save_student_attendance():
                     update_cells_list.append(cell_msg)
                     break
         
-        # 🚀 जादुई बल्क अपडेट - पूरी क्लास का डेटा 1 शॉट में लाइव सिंक!
         if update_cells_list:
             att_sheet.update_cells(update_cells_list)
                     
@@ -151,7 +147,6 @@ def save_student_attendance():
     except Exception as e:
         return jsonify({"status": "error", "message": f"सेव करने में एरर: {str(e)}"})
 
-# 👑 एडमिन के लिए टीचर्स की लिस्ट लोड करना
 @app.route('/admin/get_teachers', methods=['GET'])
 def admin_get_teachers():
     try:
@@ -170,7 +165,6 @@ def admin_get_teachers():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# 📩 एडमिन के लिए पेंडिंग छुट्टियां लोड करना
 @app.route('/admin/get_leaves', methods=['GET'])
 def admin_get_leaves():
     try:
@@ -178,19 +172,16 @@ def admin_get_leaves():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-# 🚪 लॉगआउट रूट
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# 🌐 आईफ्रेम (Iframe) सुरक्षा पास नियम
 @app.after_request
 def add_header(response):
     response.headers['X-Frame-Options'] = 'ALLOWALL'
     return response
 
 if __name__ == '__main__':
-    # रेंडर के डायनामिक पोर्ट एनवायरनमेंट को सपोर्ट करने के लिए पोर्ट चेंज
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
