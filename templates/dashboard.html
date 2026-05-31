@@ -1,365 +1,243 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>JRD Master ERP | Charcoal Lite V71</title>
-  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <style>
-    /* 🎨 GEMINI CHARCOAL LITE PREMIUM THEME */
-    :root { 
-      --bg: #f5f5f7; 
-      --panel-bg: #ffffff;
-      --charcoal-dark: #212529; 
-      --charcoal-medium: #343a40;
-      --charcoal-lite: #6c757d;
-      --border: #dee2e6;
-      --green: #2b8a3e; 
-      --pink: #c92a2a; 
-      --orange: #d9480f;
-      --neon-blue: #0b7285;
-      --shadow: rgba(0, 0, 0, 0.05);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>J.R.D. Public School | Gemini Charcoal ERP</title>
+    <style>
+        :root {
+            --bg-main: #121214;          /* गहरा चारकोल बैकग्राउंड */
+            --bg-card: #1a1a1e;          /* कार्ड्स का डार्क ग्रे */
+            --bg-input: #26262b;         /* इनपुट बॉक्स */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --gemini-blue: #3b82f6;      /* जेमिनी लाइट ब्लू */
+            --accent-green: #10b981;     /* PRESENT (P) */
+            --accent-red: #ef4444;       /* ABSENT (A) */
+            --accent-warning: #f59e0b;   /* LEAVE (L) */
+            --sidebar-width: 65px;       
+        }
 
-    body { 
-      background: var(--bg); 
-      color: var(--charcoal-dark);
-      font-family: 'Segoe UI', sans-serif; 
-      margin: 0; 
-      padding: 10px; 
-      overflow-x: hidden;
-    }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; display: flex; }
+        
+        /* ☰ जेमिनी स्टाइल साइडबार ☰ */
+        .gemini-sidebar {
+            position: fixed; top: 0; left: 0; height: 100vh;
+            width: var(--sidebar-width); background: #1a1a1e;
+            border-right: 1px solid #252529; z-index: 200;
+            display: flex; flex-direction: column; gap: 15px;
+            padding-top: 15px; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        .gemini-sidebar.expanded { width: 240px; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
 
-    /* GOL JRD LOADER */
-    #loader { 
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-      background: rgba(255,255,255,0.95); z-index: 10000; flex-direction: column; align-items: center; justify-content: center;
-    }
-    .jrd-spin { 
-      width: 100px; height: 100px; border: 5px solid #e9ecef; border-top: 5px solid var(--charcoal-dark); 
-      border-radius: 50%; animation: rot 1s linear infinite; display: flex; align-items: center; justify-content: center; 
-      text-align: center; color: var(--charcoal-dark); font-size: 11px; font-weight: 900; box-shadow: 0 0 15px var(--shadow);
-    }
-    @keyframes rot { to { transform: rotate(360deg); } }
+        .menu-toggle {
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            font-size: 22px; color: var(--text-main); cursor: pointer; margin-left: 10px;
+            border-radius: 50%; transition: background 0.2s;
+        }
+        .menu-toggle:hover { background: var(--bg-input); }
 
-    /* HEADER STYLING */
-    .header { 
-      background: var(--panel-bg); padding: 15px 20px; display: flex; justify-content: space-between; 
-      align-items: center; border-bottom: 3px solid var(--charcoal-dark); position: sticky; top: 0; z-index: 1000;
-      margin: -10px -10px 15px -10px; box-shadow: 0 2px 10px var(--shadow);
-    }
-    .header h1 { margin: 0; color: var(--charcoal-dark); font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 900; }
-    .logout-btn { 
-      background: var(--charcoal-dark); color: #fff; border: none; padding: 8px 18px; 
-      border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 11px; transition: 0.2s;
-    }
-    .logout-btn:hover { background: var(--pink); }
+        .nav-item {
+            display: flex; align-items: center; width: 220px; height: 48px;
+            margin-left: 8px; border-radius: 24px; color: var(--text-muted);
+            cursor: pointer; transition: all 0.2s ease; position: relative;
+            padding-left: 12px; gap: 20px;
+        }
+        .nav-item .icon { font-size: 20px; min-width: 30px; text-align: center; }
+        .nav-item .text { font-size: 14px; white-space: nowrap; opacity: 0; transition: opacity 0.2s; font-weight: 500; }
+        .gemini-sidebar.expanded .nav-item .text { opacity: 1; }
+        
+        .nav-item.active { background: #232329; color: var(--gemini-blue); font-weight: bold; }
+        .nav-item.active::before {
+            content: ''; position: absolute; left: -8px; top: 12px; width: 4px; height: 24px;
+            background: var(--gemini-blue); border-radius: 0 4px 4px 0;
+        }
 
-    .container { max-width: 900px; margin: 0 auto; padding-bottom: 60px; }
-    
-    /* PANELS */
-    .panel { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px var(--shadow); }
-    .panel h3 { color: var(--charcoal-medium); margin-top: 0; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-weight: 900; }
-    
-    /* STATS GRID */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px; }
-    .stat-card { background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-align: center; }
-    .stat-card small { color: var(--charcoal-lite); display: block; font-size: 10px; text-transform: uppercase; font-weight: 700; }
-    .stat-card b { font-size: 18px; color: var(--charcoal-dark); display: block; margin-top: 4px; font-weight: 900; }
+        /* मुख्य ऐप एरिया */
+        .app-main {
+            flex: 1; margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        @media (min-width: 768px) {
+            body.sidebar-open .app-main { margin-left: 240px; }
+        }
 
-    /* CALENDAR FOR TEACHER */
-    .calendar-box { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 10px; text-align: center; }
-    .cal-day-head { font-size: 10px; color: var(--charcoal-lite); padding: 4px 0; font-weight: 900; text-transform: uppercase; }
-    .cal-date { padding: 8px 0; font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--charcoal-lite); font-weight: bold; }
-    .cal-date.present { background: #ebfbee; border-color: #a9e34b; color: var(--green); }
-    .cal-date.absent { background: #fff5f5; border-color: #ffc9c9; color: var(--pink); }
-    .cal-date.holiday { background: #e3fafc; border-color: #99e9f2; color: var(--neon-blue); }
+        .app-header {
+            background: #1a1a1e; border-bottom: 1px solid #252529; padding: 15px 25px;
+            display: flex; justify-content: space-between; align-items: center; height: 65px;
+        }
+        .app-header h1 { font-size: 16px; font-weight: 600; color: var(--gemini-blue); }
+        
+        .app-container { padding: 20px; flex: 1; max-width: 900px; width: 100%; margin: 0 auto; }
+        .app-screen { display: none; animation: fadeIn 0.3s ease; }
+        .app-screen.active { display: block; }
 
-    /* 👥 ASLI LAYOUT: STUDENT ROW DESIGN (P A L) */
-    .student-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 12px; background: var(--panel-bg); border-bottom: 1px solid var(--border); margin-bottom: 5px; border-radius: 8px; transition: 0.2s; }
-    .student-row:hover { background: var(--bg); }
-    .student-info h4 { margin: 0; font-size: 15px; color: var(--charcoal-dark); text-transform: uppercase; font-weight: 900; }
-    .student-info p { margin: 4px 0 0 0; font-size: 12px; color: var(--charcoal-lite); font-weight: 600; }
-    .student-info span { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 5px; }
-    .badge-paid { background: #ebfbee; color: var(--green); border: 1px solid #c3fae8; }
-    .badge-due { background: #fff5f5; color: var(--pink); border: 1px solid #ffe3e3; }
-    .student-stats { font-size: 11px; color: var(--charcoal-lite); margin-top: 2px; display: block; }
+        /* प्रीमियम कार्ड्स और बटन्स */
+        .card { background: var(--bg-card); padding: 22px; border-radius: 12px; border: 1px solid #252529; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .card h2 { font-size: 14px; font-weight: 600; margin-bottom: 15px; color: #fff; text-transform: uppercase; }
 
-    /* 🕹️ THREE BUTTON SWITCH (P / A / L) - LARGE & BOLD FIXED */
-    .status-switch { display: flex; background: var(--bg); border-radius: 10px; padding: 4px; gap: 4px; border: 1px solid var(--border); }
-    .status-btn { border: none; width: 45px; height: 38px; font-size: 14px; font-weight: 900; border-radius: 6px; cursor: pointer; transition: 0.2s; background: #fff; color: var(--charcoal-lite); border: 1px solid var(--border); }
-    
-    .status-btn.p-active { background: var(--green) !important; color: #fff !important; box-shadow: 0 4px 10px rgba(43,138,62,0.3); border-color: var(--green); }
-    .status-btn.a-active { background: var(--pink) !important; color: #fff !important; box-shadow: 0 4px 10px rgba(201,42,42,0.3); border-color: var(--pink); }
-    .status-btn.l-active { background: var(--orange) !important; color: #fff !important; box-shadow: 0 4px 10px rgba(217,72,15,0.3); border-color: var(--orange); }
+        select, input { width: 100%; padding: 12px; margin-bottom: 12px; background-color: var(--bg-input); border: 1px solid #33333b; border-radius: 8px; color: var(--text-main); font-size: 14px; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-transform: uppercase; }
+        .btn-gemini { background: var(--gemini-blue); color: white; }
+        .btn-success { background-color: var(--accent-green); color: white; }
 
-    /* BUTTONS STYLE */
-    .master-btn { width: 100%; padding: 14px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; border: none; font-size: 13px; transition: 0.2s; margin-top: 10px; }
-    .btn-charcoal { background: var(--charcoal-dark); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .btn-charcoal:hover { background: var(--charcoal-medium); }
-    .btn-orange { background: var(--orange); color: #fff; }
-    .btn-panic { background: #fff5f5; color: var(--pink); border: 1px dashed var(--pink); font-size: 11px; }
+        /* 👥 छात्र हाजिरी लिस्ट का असली रो लेआउट */
+        .attendance-list-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #232329; }
+        .student-details h4 { font-size: 15px; color: #fff; text-transform: uppercase; font-weight: 700; }
+        .student-details p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        
+        /* 🕹️ बड़े बोल्ड P / A / L बटन्स */
+        .pal-buttons { display: flex; gap: 6px; }
+        .pal-btn { width: 42px; height: 38px; border: 1px solid #33333b; border-radius: 6px; cursor: pointer; font-weight: 900; background: var(--bg-input); color: var(--text-muted); font-size: 14px; }
+        .pal-btn.p.active { background: var(--accent-green); color: white; border-color: var(--accent-green); box-shadow: 0 0 10px rgba(16,185,129,0.4); }
+        .pal-btn.a.active { background: var(--accent-red); color: white; border-color: var(--accent-red); box-shadow: 0 0 10px rgba(239,68,68,0.4); }
+        .pal-btn.l.active { background: var(--accent-warning); color: black; border-color: var(--accent-warning); box-shadow: 0 0 10px rgba(245,158,11,0.4); }
 
-    /* ADMIN ROW */
-    .teacher-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
-
-    select, input { width: 100%; padding: 12px; background: #fff; color: var(--charcoal-dark); border: 1px solid var(--border); border-radius: 8px; font-weight: bold; outline: none; margin-bottom: 10px; box-sizing: border-box; }
-    select:focus, input:focus { border-color: var(--charcoal-dark); }
-  </style>
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; color: var(--gemini-blue); font-weight: 900; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
 </head>
 <body>
 
-<div id="loader"><div class="jrd-spin">JRD PUBLIC<br>SCHOOL</div></div>
+    <div id="loader">JRD QUANTUM ENGINE SYNC...</div>
 
-<div class="header">
-  <h1 id="portalTitle">JRD Master ERP</h1>
-  <button onclick="logout()" class="logout-btn">LOGOUT</button>
-</div>
-
-<div class="container">
-  
-  <div id="adminPanel" style="display: none;">
-    <div class="panel">
-      <h3>👑 Welcome, Director (Sarvesh Bhai)</h3>
-      <div class="stats-grid">
-        <div class="stat-card"><small>School Status</small><b>ONLINE</b></div>
-        <div class="stat-card"><small>System Pulse</small><b style="color:var(--green)">V71 LIVE</b></div>
-      </div>
+    <!-- ☰ साइडबार ☰ -->
+    <div class="gemini-sidebar" id="sidebar">
+        <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+        <div class="nav-item active" onclick="switchTab(this, 'scr-student')"><span class="icon">👥</span><span class="text">छात्र हाजिरी</span></div>
+        <div class="nav-item" onclick="switchTab(this, 'scr-admin')"><span class="icon">👑</span><span class="text">डायरेक्टर पैनल</span></div>
     </div>
 
-    <div class="panel">
-      <h3>🚀 Daily Release Hub & Broadcast</h3>
-      <label>चुनें क्लास (या पूरे स्कूल के लिए ALL)</label>
-      <select id="releaseClass">
-        <option value="ALL CLASSES">ALL CLASSES</option>
-        <option value="Class 10">Class 10</option>
-        <option value="Class 12">Class 12</option>
-      </select>
-      <button class="master-btn btn-orange" onclick="triggerReleaseSignal()">📢 छुट्टी का सिग्नल बोट को भेजें (Departure)</button>
-      
-      <input type="text" id="holidayMsg" placeholder="छुट्टी का विशेष संदेश यहाँ लिखें...">
-      <button class="master-btn btn-charcoal" onclick="triggerHolidaySignal()">🎉 सामान्य छुट्टी ब्रॉडकास्ट करें</button>
-    </div>
-
-    <div class="panel">
-      <h3>👥 Staff Attendance & Salary Tracker</h3>
-      <div id="adminStaffList">
+    <div class="app-main">
+        <div class="app-header">
+            <h1 id="portalTitle">J.R.D. Public School ERP</h1>
+            <div id="welcomeUser" style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Loading...</div>
         </div>
-    </div>
-  </div>
 
-  <div id="teacherPanel" style="display: none;">
-    <div class="panel">
-      <h3 id="tWelcome">Teacher Dashboard</h3>
-      <div class="stats-grid">
-        <div class="stat-card"><small>Assigned Class</small><b id="tClass">-</b></div>
-        <div class="stat-card"><small>Paid Days (This Month)</small><b id="tPaidDays" style="color:var(--green)">0</b></div>
-        <div class="stat-card"><small>Est. Salary</small><b id="tSalary" style="color:var(--orange)">₹ 0</b></div>
-      </div>
+        <div class="app-container">
+            <!-- स्क्रीन 1: छात्र हाजिरी (टीचर्स और एडमिन दोनों देख सकेंगे) -->
+            <div id="scr-student" class="app-screen active">
+                <div class="card">
+                    <h2>👥 Student Attendance Sheet</h2>
+                    <div id="studentAttendanceList">
+                        <!-- असली छात्र यहाँ लोड होंगे -->
+                    </div>
+                    <button class="btn btn-success" style="margin-top:20px;" onclick="saveBulkAttendance()">💾 Save Attendance Live</button>
+                </div>
+            </div>
 
-      <b style="font-size:11px; color:var(--charcoal-lite); text-transform:uppercase;">📅 Your Attendance Calendar</b>
-      <div class="calendar-box" id="teacherCalendar">
+            <!-- स्क्रीन 2: डायरेक्टर स्पेशल पैनल (सिर्फ आपके लॉगिन पर दिखेगा) -->
+            <div id="scr-admin" class="app-screen">
+                <div class="card">
+                    <h2>👑 Director Control Center (Sarvesh Bhai)</h2>
+                    <p style="margin-bottom: 15px; color: var(--accent-green);">● SYSTEM PULSE V71 LIVE</p>
+                    <button class="btn btn-gemini" onclick="alert('डेली रिलीज छुट्टी सिग्नल बोट को प्रेषित!')">📢 TRIGGER DEPARTURE SMS (ALL CLASSES)</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="panel">
-      <h3>📝 Class Student Attendance Control</h3>
-      <div id="studentAttendanceList">
-        </div>
-      <button class="master-btn btn-charcoal" onclick="saveBulkAttendance()">💾 Save Attendance Live</button>
-    </div>
+    <script>
+        let sessionUser = null;
+        let studentsData = [];
 
-    <div class="panel">
-      <h3>🛠️ Lesson Log & Panic Signal</h3>
-      <input type="text" id="lessonText" placeholder="आज क्या पाठ पढ़ाया? यहाँ दर्ज करें...">
-      <button class="master-btn btn-orange" onclick="submitLesson()">📝 लेसन लॉग सुरक्षित करें</button>
-      <button class="master-btn btn-panic" onclick="triggerPanic()">🚨 SEND EMERGENCY PANIC SIGNAL TO DIRECTOR</button>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  let sessionUser = null;
-  let studentsData = [];
-
-  function showL(v) { document.getElementById('loader').style.display = v ? 'flex' : 'none'; }
-  function logout() { window.location.href = "/logout"; }
-
-  async function loadDashboard() {
-    showL(true);
-    try {
-      const res = await fetch('/get_session_info');
-      const data = await res.json();
-      showL(false);
-
-      if (data.status === 'success') {
-        sessionUser = data;
-        document.getElementById('portalTitle').innerText = data.role === 'DIRECTOR' ? "JRD Director Panel" : "JRD Staff Portal";
-        
-        if (data.role === 'DIRECTOR') {
-          initAdminView();
-        } else {
-          initTeacherView();
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("expanded");
+            document.body.classList.toggle("sidebar-open");
         }
-      } else {
-        window.location.href = '/';
-      }
-    } catch(e) {
-      showL(false);
-      window.location.href = '/';
-    }
-  }
 
-  function initAdminView() {
-    document.getElementById('adminPanel').style.display = 'block';
-    loadAdminStaffData();
-  }
+        function switchTab(navElement, screenId) {
+            if (screenId === 'scr-admin' && sessionUser.role !== 'DIRECTOR') {
+                alert("🔒 एक्सेस ब्लॉक: यह सिर्फ सरवेश भाई (Director) के लिए है!");
+                return;
+            }
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.app-screen').forEach(screen => screen.classList.remove('active'));
+            navElement.classList.add('active');
+            document.getElementById(screenId).classList.add('active');
+            if(window.innerWidth < 768) toggleSidebar();
+        }
 
-  async function loadAdminStaffData() {
-    try {
-      const res = await fetch('/admin/get_teachers');
-      const data = await res.json();
-      const listDiv = document.getElementById('adminStaffList');
-      listDiv.innerHTML = `
-        <div class="teacher-row">
-          <div><b>Sarvesh Kumar Verma</b><small><br>Role: Director | Class: ALL</small></div>
-          <span style="color:var(--green); font-size:12px; font-weight:bold;">⚡ LIVE MASTER</span>
-        </div>
-      `;
-      if(data.status === 'success') {
-        data.teachers.forEach(t => {
-          listDiv.innerHTML += `
-            <div class="teacher-row">
-              <div><b>${t.name}</b><small><br>Class: ${t.class}</small></div>
-              <div class="status-switch">
-                <button class="status-btn p-active">P</button>
-                <button class="status-btn">A</button>
-              </div>
-            </div>
-          `;
-        });
-      }
-    } catch(e){}
-  }
+        // 📡 रेंडर बैकएंड से असली यूज़र और क्लास डेटा खींचना
+        async function loadDashboard() {
+            document.getElementById('loader').style.display = 'flex';
+            try {
+                const res = await fetch('/get_session_info');
+                const data = await res.json();
+                document.getElementById('loader').style.display = 'none';
 
-  function initTeacherView() {
-    document.getElementById('teacherPanel').style.display = 'block';
-    document.getElementById('tWelcome').innerText = `📝 Welcome, ${sessionUser.name}`;
-    document.getElementById('tClass').innerText = sessionUser.assigned_class;
-    renderCalendar();
-    loadStudentsForTeacher();
-  }
+                if (data.status === 'success') {
+                    sessionUser = data;
+                    document.getElementById('welcomeUser').innerText = data.name + ` (${data.assigned_class})`;
+                    loadStudents();
+                } else {
+                    window.location.href = '/';
+                }
+            } catch(e) { window.location.href = '/'; }
+        }
 
-  function renderCalendar() {
-    const cal = document.getElementById('teacherCalendar');
-    cal.innerHTML = "";
-    const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-    days.forEach(d => { cal.innerHTML += `<div class="cal-day-head">${d}</div>`; });
+        // 👥 असली गूगल शीट से छात्रों की लिस्ट P, A, L बटन्स के साथ लोड करना
+        async function loadStudents() {
+            try {
+                const res = await fetch(`/get_students?class=${encodeURIComponent(sessionUser.assigned_class)}`);
+                const data = await res.json();
+                
+                if (data.status === 'success') {
+                    studentsData = data.students;
+                    const listDiv = document.getElementById('studentAttendanceList');
+                    listDiv.innerHTML = "";
 
-    const holidays = [1, 15, 25]; 
-    let totalPaid = 0;
-    for (let i = 1; i <= 31; i++) {
-      let typeClass = "present"; 
-      let dateCheck = new Date(2026, 4, i); // May 2026
-      if (dateCheck.getDay() === 0 || holidays.includes(i)) {
-        typeClass = "holiday";
-      }
-      totalPaid++;
-      cal.innerHTML += `<div class="cal-date ${typeClass}">${i}</div>`;
-    }
-    document.getElementById('tPaidDays').innerText = totalPaid;
-    document.getElementById('tSalary').innerText = "₹ " + (totalPaid * 500);
-  }
+                    studentsData.forEach((student, index) => {
+                        const isP = student.status === 'PRESENT';
+                        const isA = student.status === 'ABSENT';
+                        const isL = student.status === 'LEAVE';
 
-  // 👥 REAL SYNC: LOADS FROM GOOGLE SHEET WITH P A L STATS
-  async function loadStudentsForTeacher() {
-    showL(true);
-    try {
-      const res = await fetch(`/get_students?class=${encodeURIComponent(sessionUser.assigned_class)}`);
-      const data = await res.json();
-      showL(false);
-      
-      if (data.status === 'success') {
-        studentsData = data.students;
-        const listDiv = document.getElementById('studentAttendanceList');
-        listDiv.innerHTML = "";
+                        const row = document.createElement('div');
+                        row.className = 'attendance-list-row';
+                        row.innerHTML = `
+                            <div class="student-details">
+                                <h4>${student.student_name}</h4>
+                                <p>Father: ${student.father_name} | Mob: ${student.mobile}</p>
+                            </div>
+                            <div class="pal-buttons">
+                                <button class="pal-btn p ${isP?'active':''}" onclick="changeStatus(${index}, 'PRESENT', this)">P</button>
+                                <button class="pal-btn a ${isA?'active':''}" onclick="changeStatus(${index}, 'ABSENT', this)">A</button>
+                                <button class="pal-btn l ${isL?'active':''}" onclick="changeStatus(${index}, 'LEAVE', this)">L</button>
+                            </div>
+                        `;
+                        listDiv.appendChild(row);
+                    });
+                }
+            } catch(e) { alert("गूगल शीट सिंक फेल!"); }
+        }
 
-        studentsData.forEach((student, index) => {
-          // Default logic matching status
-          const isP = student.status === 'PRESENT';
-          const isA = student.status === 'ABSENT';
-          const isL = student.status === 'LEAVE';
+        function changeStatus(index, status, btn) {
+            studentsData[index].status = status;
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.pal-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
 
-          const row = document.createElement('div');
-          row.className = 'student-row';
-          row.innerHTML = `
-            <div class="student-info">
-              <h4>${student.student_name}</h4>
-              <p>Father: ${student.father_name} <span class="badge-paid">PAID</span></p>
-              <small class="student-stats">History: P: ${student.p || 0} | A: ${student.a || 0}</small>
-            </div>
-            <div class="status-switch">
-              <button class="status-btn ${isP ? 'p-active' : ''}" onclick="changeStatus(${index}, 'PRESENT', this)">P</button>
-              <button class="status-btn ${isA ? 'a-active' : ''}" onclick="changeStatus(${index}, 'ABSENT', this)">A</button>
-              <button class="status-btn ${isL ? 'l-active' : ''}" onclick="changeStatus(${index}, 'LEAVE', this)">L</button>
-            </div>
-          `;
-          listDiv.appendChild(row);
-        });
-      }
-    } catch(e) { showL(false); }
-  }
+        // 💾 सेव दबाते ही रेंडर पाइथन के ज़रिए गूगल शीट में लाइव ओवरराइट लॉक
+        async function saveBulkAttendance() {
+            document.getElementById('loader').style.display = 'flex';
+            try {
+                const res = await fetch('/save_student_attendance', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ records: studentsData })
+                });
+                const data = await res.json();
+                document.getElementById('loader').style.display = 'none';
+                alert(data.message); // "डेटा लाइव गूगल शीट में ओवरराइड होकर सुरक्षित सेव हो गया है!"
+                loadStudents();
+            } catch(e) { document.getElementById('loader').style.display = 'none'; alert("सेव फेल हुआ!"); }
+        }
 
-  function changeStatus(index, status, btn) {
-    studentsData[index].status = status;
-    const parent = btn.parentElement;
-    parent.querySelectorAll('.status-btn').forEach(b => {
-      b.classList.remove('p-active', 'a-active', 'l-active');
-    });
-    if (status === 'PRESENT') btn.classList.add('p-active');
-    else if (status === 'ABSENT') btn.classList.add('a-active');
-    else if (status === 'LEAVE') btn.classList.add('l-active');
-  }
-
-  async function saveBulkAttendance() {
-    showL(true);
-    try {
-      const res = await fetch('/save_student_attendance', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ records: studentsData })
-      });
-      const data = await res.json();
-      showL(false);
-      alert(data.message);
-      loadStudentsForTeacher();
-    } catch(e) { showL(false); alert("Error saving data"); }
-  }
-
-  function triggerReleaseSignal() {
-    let cls = document.getElementById('releaseClass').value;
-    alert(`JRD मास्टर पल्स: ${cls} के लिए छुट्टी का सिग्नल बोट को भेज दिया गया है!`);
-  }
-
-  function triggerHolidaySignal() {
-    let msg = document.getElementById('holidayMsg').value;
-    if(!msg) { alert("कृपया संदेश लिखें!"); return; }
-    alert(`JRD मास्टर पल्स: बोट को छुट्टी ब्रॉडकास्ट संदेश भेजा गया: ${msg}`);
-  }
-
-  function submitLesson() {
-    let txt = document.getElementById('lessonText').value;
-    if(!txt) return;
-    alert("JRD मास्टर: आज का पाठ (Lesson Log) सुरक्षित कर लिया गया है!");
-    document.getElementById('lessonText').value = "";
-  }
-
-  function triggerPanic() {
-    alert("🚨 सरवेश भाई (Director) को इमरजेंसी पैनिक सिग्नल भेज दिया गया है!");
-  }
-
-  window.onload = loadDashboard;
-</script>
+        window.onload = loadDashboard;
+    </script>
 </body>
 </html>
